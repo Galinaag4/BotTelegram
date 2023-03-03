@@ -7,4 +7,12 @@ CREATE TABLE IF NOT EXISTS notification_task(
     Text VARCHAR,
     Textmessage VARCHAR
 );
+DROP TABLE notification_task;
+CREATE TABLE IF NOT EXISTS notification(
+    Id INT,
+    DateTime TIMESTAMP,
+    Text VARCHAR,
+    Textmessage VARCHAR
+);
+
 

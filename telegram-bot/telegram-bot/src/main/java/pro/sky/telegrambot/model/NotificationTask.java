@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -12,14 +13,12 @@ public class NotificationTask {
     @Id
     @GeneratedValue
     private long id;
-    private LocalDate date;
-    private LocalTime time;
+    private LocalDateTime dateTime;
     private String textmessage;
     private String text;
 
-    public NotificationTask(LocalDate date, LocalTime time, String textmessage, String text) {
-        this.date = date;
-        this.time = time;
+    public NotificationTask(LocalDateTime dateTime,  String textmessage, String text) {
+        this.dateTime = dateTime;
         this.textmessage = textmessage;
         this.text = text;
     }
@@ -36,20 +35,12 @@ public class NotificationTask {
         this.id = id;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalTime time) {
-        this.time = time;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getTextmessage() {
@@ -73,20 +64,19 @@ public class NotificationTask {
         if (this == o) return true;
         if (!(o instanceof NotificationTask)) return false;
         NotificationTask that = (NotificationTask) o;
-        return getId() == that.getId() && Objects.equals(getDate(), that.getDate()) && Objects.equals(getTime(), that.getTime()) && Objects.equals(getTextmessage(), that.getTextmessage()) && Objects.equals(getText(), that.getText());
+        return getId() == that.getId() && Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getTextmessage(), that.getTextmessage()) && Objects.equals(getText(), that.getText());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDate(), getTime(), getTextmessage(), getText());
+        return Objects.hash(getId(), getDateTime(), getTextmessage(), getText());
     }
 
     @Override
     public String toString() {
         return "NotificationTask{" +
                 "id=" + id +
-                ", date=" + date +
-                ", time=" + time +
+                ", dateTime=" + dateTime +
                 ", textmessage='" + textmessage + '\'' +
                 ", text='" + text + '\'' +
                 '}';
