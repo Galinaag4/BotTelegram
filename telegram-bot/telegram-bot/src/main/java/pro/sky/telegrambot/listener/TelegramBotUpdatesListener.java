@@ -14,6 +14,8 @@ import pro.sky.telegrambot.repository.NotificationRepository;
 
 import javax.annotation.PostConstruct;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +24,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
+    @Autowired
     private final NotificationRepository notificationRepository;
 
 
@@ -56,6 +59,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 String dateTime = matcher.group(1);
                 String text = matcher.group(2);
 
+                NotificationTask notificationTask = new NotificationTask();
+                notificationTask.setId(update.message().chat().id());
+                notificationTask.setDateTime(LocalDateTime.parse("01.01.2022 20:00", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+                notificationTask.setText(text);
+                notificationTask.setTextmessage("примечание");
+                System.out.println(notificationTask.toString());
+                createTask(notificationTask);
+            }else{
+                SendMessage message2 = new SendMessage(update.message().chat().id(), "Не могу распознать строку");
+                telegramBot.execute(message2);
 
             }
 
@@ -70,9 +83,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public void run() {
 
     }
-    public NotificationTask createTask(NotificationTask notificationTask) {
+    public  void createTask(NotificationTask notificationTask) {
         logger.info("Метод createTask ");
-        return notificationRepository.save(notificationTask);
+        notificationRepository.save(notificationTask);
     }
 
 
