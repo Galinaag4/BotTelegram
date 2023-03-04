@@ -33,6 +33,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private TelegramBot telegramBot;
 
+
     public TelegramBotUpdatesListener(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
 
@@ -53,19 +54,19 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 telegramBot.execute(message1);
 
             }
-            Pattern pattern = Pattern.compile("([0-9\\.\\ \\:]+)([\\W]+)");
+            Pattern pattern = Pattern.compile("([0-9\\.\\:\\s]{16})(\\s)([\\W+]+)");
             Matcher matcher = pattern.matcher(message);
             if (matcher.matches()) {
-                String dateTime = matcher.group(1);
+                LocalDateTime dateTime = LocalDateTime.parse(matcher.group(1), DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
                 String text = matcher.group(2);
 
                 NotificationTask notificationTask = new NotificationTask();
                 notificationTask.setId(update.message().chat().id());
-                notificationTask.setDateTime(LocalDateTime.parse("01.01.2022 20:00", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+                notificationTask.setDateTime(dateTime);
                 notificationTask.setText(text);
                 notificationTask.setTextmessage("примечание");
-                System.out.println(notificationTask.toString());
-                createTask(notificationTask);
+                logger.info("Saving {} to db", notificationTask);
+                notificationRepository.save(notificationTask);
             }else{
                 SendMessage message2 = new SendMessage(update.message().chat().id(), "Не могу распознать строку");
                 telegramBot.execute(message2);
@@ -78,15 +79,21 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
+
     }
     @Scheduled(cron = "0 0/1 * * * *")
     public void run() {
 
     }
-    public  void createTask(NotificationTask notificationTask) {
+   public  void createTask(NotificationTask notificationTask) {
         logger.info("Метод createTask ");
         notificationRepository.save(notificationTask);
     }
 
 
-}
+    }
+
+
+
+
+
