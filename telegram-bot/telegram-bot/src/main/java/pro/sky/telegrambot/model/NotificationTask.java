@@ -1,9 +1,7 @@
 package pro.sky.telegrambot.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -12,16 +10,18 @@ public class NotificationTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //@Column(name = "datetime")
+
     private LocalDateTime dateTime;
-    //@Column(name = "textmessage")
+    private Long chatId;
+
+
     private String textmessage;
-    //@Column(name = "text")
+
     private String text;
 
 
-    public NotificationTask(LocalDateTime dateTime,  String textmessage, String text) {
-        //this.id = counter++;
+    public NotificationTask(Long chatId,LocalDateTime dateTime,  String textmessage, String text) {
+        this.chatId = chatId;
         this.dateTime = dateTime;
         this.textmessage = textmessage;
         this.text = text;
@@ -30,6 +30,14 @@ public class NotificationTask {
     public NotificationTask() {
         //this.id = counter++;
 
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
     public Long getId() {
@@ -69,19 +77,19 @@ public class NotificationTask {
         if (this == o) return true;
         if (!(o instanceof NotificationTask)) return false;
         NotificationTask that = (NotificationTask) o;
-        return getId() == that.getId() && Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getTextmessage(), that.getTextmessage()) && Objects.equals(getText(), that.getText());
+        return Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getChatId(), that.getChatId()) && Objects.equals(getTextmessage(), that.getTextmessage()) && Objects.equals(getText(), that.getText());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDateTime(), getTextmessage(), getText());
+        return Objects.hash(getDateTime(), getChatId(), getTextmessage(), getText());
     }
 
     @Override
     public String toString() {
         return "NotificationTask{" +
-                "id=" + id +
-                ", dateTime=" + dateTime +
+                "dateTime=" + dateTime +
+                ", chatId=" + chatId +
                 ", textmessage='" + textmessage + '\'' +
                 ", text='" + text + '\'' +
                 '}';
